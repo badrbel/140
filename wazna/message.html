@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💕 رسالة لوزنه</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="message-container" id="message-box">
+      <!-- زر المفضلة سيضاف هنا ديناميكياً -->
+      <div id="message"></div>
+    </div>
+  </div>
+
+  <div class="buttons-container">
+    <button class="button" onclick="refreshMessage()">رسالة جديدة 💖</button>
+    <button class="button" onclick="goBack()">رجوع 🏠</button>
+  </div>
+
+  <!-- استيراد الملف المشترك -->
+  <script src="script.js"></script>
+
+  <script>
+    let currentMessage = '';
+
+    // دالة تحديث الرسالة
+    function refreshMessage() {
+      const newMessage = getNextMessage();
+      currentMessage = newMessage;
+      localStorage.setItem('randomMessage', newMessage);
+
+      // تحديث زر المفضلة
+      updateFavoriteButton();
+
+      // كتابة الرسالة
+      typeMessage(newMessage, 'message');
+
+      // تغيير الخلفية
+      setRandomBackground();
+
+      // تحديث عداد الرسائل
+      incrementMessages();
+      updateStatsDisplay();
+
+      // تأثير صوتي
+      playClickSound();
+
+      // فحص المفاجأة
+      checkSurprise();
+    }
+
+    // دالة العودة للصفحة الرئيسية
+    function goBack() {
+      playClickSound();
+      smoothTransition('index.html');
+    }
+
+    // تحديث زر المفضلة
+    function updateFavoriteButton() {
+      // إزالة الزر القديم إن وجد
+      const oldBtn = document.querySelector('.favorite-btn');
+      if (oldBtn) oldBtn.remove();
+
+      // إضافة الزر الجديد
+      const messageBox = document.getElementById('message-box');
+      const favoriteBtn = createFavoriteButton(currentMessage);
+      messageBox.appendChild(favoriteBtn);
+    }
+
+    // عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedMessage = localStorage.getItem('randomMessage') || getNextMessage();
+      currentMessage = savedMessage;
+
+      typeMessage(savedMessage, 'message');
+      setRandomBackground();
+
+      // عرض الإحصائيات
+      createStatsDisplay();
+
+      // عرض مفتاح التحكم بالصوت
+      createSoundToggle();
+
+      // تحديث عداد الرسائل
+      incrementMessages();
+      updateStatsDisplay();
+
+      // إضافة زر المفضلة
+      setTimeout(() => {
+        updateFavoriteButton();
+      }, 500);
+
+      // فحص المفاجأة
+      checkSurprise();
+    });
+  </script>
+</body>
+
+</html>
